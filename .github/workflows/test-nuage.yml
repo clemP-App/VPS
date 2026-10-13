@@ -8,19 +8,21 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Test sorties vers Nuage
+      - name: Test connexions sortantes
         run: |
-          echo "Google"
-          curl -I -v --connect-timeout 8 https://www.google.com/generate_204 || true
+          test_url() {
+            echo ""
+            echo "===== $1 ====="
+            timeout 15s curl -4 -I -sS -v \
+              --connect-timeout 8 \
+              --max-time 12 \
+              -w "\nRESULT http=%{http_code} ip=%{remote_ip} connect=%{time_connect} total=%{time_total} error=%{errormsg}\n" \
+              "$2" || true
+          }
 
-          echo "Portail Apps Education"
-          curl -I -v --connect-timeout 8 https://portail.apps.education.fr/ || true
-
-          echo "Nuage01"
-          curl -I -v --connect-timeout 8 https://nuage01.apps.education.fr/status.php || true
-
-          echo "Nuage03"
-          curl -I -v --connect-timeout 8 https://nuage03.apps.education.fr/status.php || true
-
-          echo "Nuage04"
-          curl -I -v --connect-timeout 8 https://nuage04.apps.education.fr/status.php || true
+          test_url "Google" "https://www.google.com/generate_204"
+          test_url "Portail Apps Education" "https://portail.apps.education.fr/"
+          test_url "Nextcloud temoin" "https://nextcloud.com/"
+          test_url "Nuage01" "https://nuage01.apps.education.fr/status.php"
+          test_url "Nuage03" "https://nuage03.apps.education.fr/status.php"
+          test_url "Nuage04" "https://nuage04.apps.education.fr/status.php"
