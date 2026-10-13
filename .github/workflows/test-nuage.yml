@@ -1,0 +1,26 @@
+name: Test Nuage
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Test sorties vers Nuage
+        run: |
+          echo "Google"
+          curl -I -v --connect-timeout 8 https://www.google.com/generate_204 || true
+
+          echo "Portail Apps Education"
+          curl -I -v --connect-timeout 8 https://portail.apps.education.fr/ || true
+
+          echo "Nuage01"
+          curl -I -v --connect-timeout 8 https://nuage01.apps.education.fr/status.php || true
+
+          echo "Nuage03"
+          curl -I -v --connect-timeout 8 https://nuage03.apps.education.fr/status.php || true
+
+          echo "Nuage04"
+          curl -I -v --connect-timeout 8 https://nuage04.apps.education.fr/status.php || true
