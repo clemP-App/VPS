@@ -13,13 +13,13 @@ jobs:
           test_login_flow() {
             echo ""
             echo "===== $1 ====="
-            timeout 20s curl -4 -sS -v \
+            timeout 25s curl -4 -sS -v -L \
               -X POST \
               --connect-timeout 8 \
-              --max-time 15 \
+              --max-time 20 \
               -H "User-Agent: OutilsEPS-TestLoginFlow/1.0" \
               -H "Accept: application/json" \
-              -w "\nRESULT http=%{http_code} ip=%{remote_ip} connect=%{time_connect} total=%{time_total} error=%{errormsg}\n" \
+              -w "\nRESULT http=%{http_code} ip=%{remote_ip} connect=%{time_connect} total=%{time_total} redirect=%{num_redirects} final_url=%{url_effective} error=%{errormsg}\n" \
               "$2/index.php/login/v2" || true
           }
 
