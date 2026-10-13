@@ -1,4 +1,4 @@
-name: Test Nuage
+name: Test Login Flow Nuage
 
 on:
   workflow_dispatch:
@@ -8,21 +8,21 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Test connexions sortantes
+      - name: Tester Login Flow v2 Nextcloud
         run: |
-          test_url() {
+          test_login_flow() {
             echo ""
             echo "===== $1 ====="
-            timeout 15s curl -4 -I -sS -v \
+            timeout 20s curl -4 -sS -v \
+              -X POST \
               --connect-timeout 8 \
-              --max-time 12 \
+              --max-time 15 \
+              -H "User-Agent: OutilsEPS-TestLoginFlow/1.0" \
+              -H "Accept: application/json" \
               -w "\nRESULT http=%{http_code} ip=%{remote_ip} connect=%{time_connect} total=%{time_total} error=%{errormsg}\n" \
-              "$2" || true
+              "$2/index.php/login/v2" || true
           }
 
-          test_url "Google" "https://www.google.com/generate_204"
-          test_url "Portail Apps Education" "https://portail.apps.education.fr/"
-          test_url "Nextcloud temoin" "https://nextcloud.com/"
-          test_url "Nuage01" "https://nuage01.apps.education.fr/status.php"
-          test_url "Nuage03" "https://nuage03.apps.education.fr/status.php"
-          test_url "Nuage04" "https://nuage04.apps.education.fr/status.php"
+          test_login_flow "Nuage01" "https://nuage01.apps.education.fr"
+          test_login_flow "Nuage03" "https://nuage03.apps.education.fr"
+          test_login_flow "Nuage04" "https://nuage04.apps.education.fr"
